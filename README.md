@@ -4,7 +4,7 @@
 
 ### 1.  Download the repository on your local computer.
 ```sh
-git clone [https://github.com/prabhat-123/Attendance_System_Using_Face_Recognition.git](https://github.com/CodePeacock/AI-Attendance-and-Anti-Spoofing-System.git)
+git clone https://github.com/CodePeacock/AI-Attendance-and-Anti-Spoofing-System.git
 ```
 
 ### 2. After downloading, you have to open Command prompt/Anaconda prompt/Visual studio terminal to run this project.
