@@ -5,3 +5,6 @@ Pillow
 PyMySQL
 pandas
 APScheduler
+keras
+matplotlib
+numpy

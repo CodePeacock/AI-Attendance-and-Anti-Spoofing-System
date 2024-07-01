@@ -5,7 +5,6 @@ import pickle
 import random
 import re
 import shutil
-import sys
 import time
 from datetime import datetime
 from statistics import mode
@@ -36,37 +35,16 @@ from tkinter.ttk import Combobox, Progressbar, Scrollbar, Treeview
 import cv2
 import numpy as np
 import pymysql
-from keras.models import model_from_json
 from keras.preprocessing.image import img_to_array
 from PIL import Image, ImageTk
 
-from extract_embeddings import Extract_Embeddings
+from model_loading import loading_models
 from training import Training
 
 root_dir = os.getcwd()
 
-try:
-    embedding_obj = Extract_Embeddings(model_path="models/facenet_keras.h5")
-    embedding_model = embedding_obj.load_model()
-    face_cascade = cv2.CascadeClassifier("models/haarcascade_frontalface_default.xml")
 
-    with open(
-        "antispoofing_models/finalyearproject_antispoofing_model_mobilenet.json", "r"
-    ) as json_file:
-        loaded_model_json = json_file.read()
-    liveness_model = model_from_json(loaded_model_json)
-    # load weights into new model
-    liveness_model.load_weights(
-        "antispoofing_models/finalyearproject_antispoofing_model_74-0.986316.h5"
-    )
-    print("Liveness Model loaded successfully from disk")
-
-except cv2.error:
-    print("Error: Provide correct path for face detection model.")
-    sys.exit(1)
-except Exception as e:
-    print(f"{str(e)}")
-    sys.exit(1)
+embedding_obj, embedding_model, face_cascade, liveness_model = loading_models()
 ############################################ Admin Login page #############
 face = Tk()
 face.title("Admin Login Page")
@@ -406,14 +384,14 @@ def login():
                                         if re.search("^[9]\d{9}$", contact_var.get()):
                                             regex = "^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$"
                                             if re.search(regex, address_var.get()):
-                                                id = eid_var.get()
+                                                staff_id: str = eid_var.get()
                                                 name = fname_var.get()
                                                 staff_names = os.listdir(dataset_dir)
                                                 staff_ids = [
                                                     x.split("_")[1] for x in staff_names
                                                 ]
-                                                if id in staff_ids:
-                                                    index = staff_ids.index(id)
+                                                if staff_id in staff_ids:
+                                                    index = staff_ids.index(staff_id)
                                                     staff_name = staff_names[index]
                                                     q = messagebox.askyesno(
                                                         "Notification",
@@ -426,7 +404,8 @@ def login():
                                                         )
                                                         shutil.rmtree(input_directory)
                                                         output_directory = os.path.join(
-                                                            dataset_dir, name + "_" + id
+                                                            dataset_dir,
+                                                            name + "_" + staff_id,
                                                         )
                                                         os.mkdir(output_directory)
                                                         count = 1
@@ -520,7 +499,7 @@ def login():
                                                             ),
                                                             os.path.join(
                                                                 dataset_dir,
-                                                                name + "_" + id,
+                                                                name + "_" + staff_id,
                                                             ),
                                                         )
                                                         cur.execute(
@@ -666,7 +645,7 @@ def login():
                             bg="gray",
                             font=("Italic", 20, "bold"),
                         ).place(x=90, y=30)
-                        id = Label(
+                        emp_id = Label(
                             f2,
                             text="Employee ID",
                             bg="gray",
@@ -1045,14 +1024,14 @@ def login():
                                     preds = recognizer.predict_proba(embedding)[0]
                                     p = np.argmax(preds)
                                     proba = preds[p]
-                                    id = label.classes_[p]
-                                    name = getkey(id, staff_details)
+                                    staff_id = label.classes_[p]
+                                    name = getkey(staff_id, staff_details)
                                     if proba >= 0.6:
                                         color = [int(c) for c in COLORS[p]]
                                         cv2.rectangle(
                                             frame, (x, y), (x + w, y + h), color, 2
                                         )
-                                        text = "{} {}".format(name, id)
+                                        text = "{} {}".format(name, staff_id)
                                         cv2.putText(
                                             frame,
                                             text,
@@ -1062,12 +1041,12 @@ def login():
                                             color,
                                             2,
                                         )
-                                        predictions.append(id)
+                                        predictions.append(staff_id)
                                     else:
                                         name = "NONE"
-                                        id = "NONE"
+                                        staff_id = "NONE"
                                         color = (255, 255, 0)
-                                        text = "{} {}".format(name, id)
+                                        text = "{} {}".format(name, staff_id)
                                         cv2.putText(
                                             frame,
                                             text,
@@ -1492,7 +1471,7 @@ def login():
                     ques = messagebox.askyesnocancel(
                         "Notification", "Do you Really want to exit?", parent=attendance
                     )
-                    if ques == True:
+                    if ques is True:
                         attendance.destroy()
 
                 #################################### Function to display the all Images ###########################################################
@@ -1547,8 +1526,8 @@ def login():
                             embeddings = []
                             for i, face_pixel in enumerate(face_pixels):
                                 j = i + 1
-                                percent.set(str(int((j / l) * 100)) + "%")
-                                text.set(str(j) + "/" + str(l) + "tasks completed")
+                                percent.set(str(int((j / length) * 100)) + "%")
+                                text.set(str(j) + "/" + str(length) + "tasks completed")
                                 pgbar["value"] = j
                                 fe.update()
                                 sample = np.expand_dims(face_pixel, axis=0)
@@ -1582,14 +1561,14 @@ def login():
                             font=("times new roman", 18, "bold"),
                             command=back,
                         ).place(x=1250, y=1)
-                        l = len(face_pixels)
+                        length = len(face_pixels)
                         percent = StringVar()
                         text = StringVar()
                         pgbar = Progressbar(
                             fe,
                             length=500,
                             mode="determinate",
-                            maximum=l,
+                            maximum=length,
                             value=0,
                             orient=HORIZONTAL,
                         )
@@ -1643,8 +1622,10 @@ def login():
                                 embeddings = []
                                 for i, face_pixel in enumerate(face_pixels):
                                     j = i + 1
-                                    percent.set(str(int((j / l) * 100)) + "%")
-                                    text.set(str(j) + "/" + str(l) + "tasks completed")
+                                    percent.set(str(int((j / length) * 100)) + "%")
+                                    text.set(
+                                        str(j) + "/" + str(length) + "tasks completed"
+                                    )
                                     pgbar["value"] = j
                                     fe.update()
                                     sample = np.expand_dims(face_pixel, axis=0)
@@ -1701,14 +1682,14 @@ def login():
                                 font=("times new roman", 18, "bold"),
                                 command=back,
                             ).place(x=1250, y=1)
-                            l = len(face_pixels)
+                            length = len(face_pixels)
                             percent = StringVar()
                             text = StringVar()
                             pgbar = Progressbar(
                                 fe,
                                 length=500,
                                 mode="determinate",
-                                maximum=l,
+                                maximum=length,
                                 value=0,
                                 orient=HORIZONTAL,
                             )
