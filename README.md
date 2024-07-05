@@ -1,113 +1,83 @@
-# Smart-AI-Attendance-System-With-AntiSpoofing
+# AI Attendance System With AntiSpoofing
 
-## HOW TO RUN THIS PROJECT
+This project implements an advanced attendance system that leverages face recognition technology along with anti-spoofing measures to ensure the authenticity of the attendance process. It's designed to be a comprehensive solution for educational institutions or corporate environments looking to automate their attendance tracking with added security.
 
-### 1.  Download the repository on your local computer.
+## Getting Started
+
+These instructions will guide you through setting up and running the AI Attendance System With AntiSpoofing on your local machine.
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+- Python 3.10 (The project is tested and implemented with Python 3.10)
+- Conda (Recommended for managing Python versions and virtual environments)
+
+### Installation
+
+1. **Clone the repository** to your local machine:
+
 ```sh
 git clone https://github.com/CodePeacock/AI-Attendance-and-Anti-Spoofing-System.git
 ```
 
-### 2. After downloading, you have to open Command prompt/Anaconda prompt/Visual studio terminal to run this project.
+2. **Navigate to the project directory**:
 
+```sh
+cd AI-Attendance-and-Anti-Spoofing-System
+```
 
-### 3. Before running any files, you have to set up  virtual environment in the directory where the project is located and 
-install all the dependenices required for this project.
+3. **Create a virtual environment**:
 
+- On Windows (using Conda):
 
-Creating virtual environment enable us to install the dependencies virtually for this project only without affecting the python dependencies on  your computer.
+```sh
+conda create -n sams python=3.10
+conda activate ams
+```
 
+- On Windows (using venv):
 
-A virtual environment is a tool that helps to keep dependencies required by different projects separate by creating isolated python virtual environments for them.
+```sh
+python -m venv venv
+venv\Scripts\activate
+```
 
+- On Linux or Mac:
 
-For installing virtual environment on command prompt and visual studio terminal:
+```python
+python3 -m venv venv
+source venv/bin/activate
+```
 
+4. **Install the required dependencies**:
 
-##### i) First of all you have to install virtual environment tool to create one.
+```sh
+pip install -r requirements.txt
+```
 
+### Running the Project
 
- For installation:
-   
-   
-### On Windows:
-   
-   
-      python -m pip install --user virtualenv
-      
-    
-      
-##### Recommended
-For installing virtual environment on Anaconda Prompt(Windows):
+After installing all the dependencies, you can run the project by executing the `attendance_w_antispoofing.py` script:
 
+```sh
+python attendance_w_antispoofing.py
+```
+This will launch the AI Attendance System With AntiSpoofing application.
 
-       conda install -c anaconda virtualenv
-   
-   
-### On MacOS or Linux:
-  
-  
-      py -m pip install --user virtualenv
-     
-     
-##### ii) After installing virtual environment, you have to install all the dependencies required to run this project in your virtual environment. For doing so you have to follow the following steps:
-  
-  
-  First of all, you have to change your working directory to the location of this repository in your computer by using the following command:
-  
-  
-        cd /*location to the repository */
-        e.g cd E:/Smart-AI-Attendance-System-With-AntiSpoofing/ (location to the repository in local computer)
-  
-  
- ##### iii) After changing the working directory to the current repository/project create a virtual environment by using the following commands:
- 
- ### On Windows:
-    For Visual Studio Code Users
-     
-     python -m venv venv 
-     
-     
-   Here venv is the name of the environment you like to choose.
-     
- 
- #### Recommended
-     On Anaconda Prompt (Windows)
-     
-     conda create -n "your virtual environment name" python=3.6 (The code is tested and implemented in 3.6 so install python 3.6)
-     e.g.
-     
-     conda create -n sams python=3.6
-     
-     
-     
- ### On Linux or Mac:
-     python3 -m venv venv
-    
-     
-##### iv) After creating a virtual environment in a working directory, you need to activate the virtual environment:
+## Features
 
- ### On Windows:
-   
-    On Visual Studio Code:
- 
-       venv\Scripts\activate
-       
- 
- #### Recommended
-   On Anaconda Prompt (Windows):
-  
-     conda activate "your virtual environment name"
-   
-     e.g 
-   
-     conda activate sams
-   
+1. 😊Face Recognition-Based Attendance: Automatically marks attendance by recognizing faces.
 
-#### v) Now you need to install all the requirements and dependencies for running this project.
-       
-       pip install -r requirements.txt
+2. 🤖 Anti-Spoofing: Incorporates anti-spoofing measures to prevent fraudulent attendance.
 
-  ###### Install the dependencies by seeing the requirements.txt file.
-  
-### Note: The project will not work if the version of python is different. And try installing all the dependencies by following the above instructions if it does not work.
- ### Finally run attendance_with_antispoofing.py to run the app..
+3. 🏬  Embedding Extraction: Extracts and saves face embeddings for accurate recognition.
+
+4. 📒 Attendance Records: Maintains detailed attendance records for further analysis.
+Contributing
+
+## Humble Request
+Contributions to the AI Attendance System With AntiSpoofing are welcome. Please feel free to fork the repository, make changes, and submit pull requests.
+
+### License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
